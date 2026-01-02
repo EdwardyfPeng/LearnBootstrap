@@ -30,6 +30,7 @@ devtools::install_github("EdwardyfPeng/LearnBootstrap")
  
 ## 📚 Examples
 1. Bootstrapping Statistics (Confidence Intervals)
+   
 Standard formulas for the standard error of the Median or CV (Coefficient of Variation) are complex or non-existent. `lb_boot()` makes this easy.
 
 ```{R}
@@ -53,6 +54,7 @@ print(boot_cv)
 ```
 
 2. Robust ANOVA (Handling Unequal Variances)
+   
 When groups have different variances (Heteroscedasticity), standard ANOVA fails. Use Stratified Bootstrap to fix this.
 
 ```{r}
@@ -76,7 +78,10 @@ strat_boot <- lb_boot(value ~ group, data = df_anova, test = "stratified")
 print(strat_boot)
 ```
 3. Bootstrap for Linear Regression
-In linear regression, standard p-values rely on the assumption that residuals are normally distributed. Residual Bootstrap allows you to estimate standard errors and confidence intervals for regression coefficients without this assumption.
+   
+In linear regression, standard p-values rely on the assumption that residuals are normally distributed. `lb_boot` supports two major strategies for regression models (residual bootstrap and pairs bootstrap). They allows you to estimate standard errors and confidence intervals for regression coefficients without this normal assumption.
+
+Residual Bootstrap can be used for data with homoscedasticity. Pairs Bootstrap can handle data with heteroscedasticity because it can capture the stucture of original data by resampling paired $(X_i, Y_i)$.
 
 ```{R}
 # Generate synthetic regression data with non-normal noise
@@ -94,12 +99,11 @@ model <- lm(y ~ x)
 boot_reg <- lb_boot(model, R = 1000)
 
 print(boot_reg)
-
-# Optional: Calculate 95% Confidence Intervals
-# Compare these with confint(model) which assumes normality
-# confint(boot_reg) # If you have implemented a confint method
+confint(boot_reg) 
+```
 
 4. Aligned Rank Transform (ART) for Split-Plot
+
 Designed for Interaction Effects in split-plot designs where normality assumptions are violated.
 
 Scenario: An experiment on dogs (Block) testing the effect of Diabetes (Whole Plot) and Drug Delivery Method (Sub Plot) on insulin turnover.
